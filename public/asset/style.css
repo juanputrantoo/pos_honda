@@ -1,0 +1,30 @@
+.fab-add-button{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    margin: 30px;
+    width: 50px;
+    height: 50px;
+    font-size: 25px!important;
+}
+
+/* .fab-add-button i{
+    vertical-align: middle;
+    font-size: 25px;
+} */
+
+/* .alert-status{
+    position: fixed!important;
+    right: 0;
+    top: 0;
+    width: auto;
+    opacity: 0.8;
+} */
+
+ul .pagination{
+    text-align: center!important;
+}
+
+ul .pagination li{
+    margin: auto!important;
+}
