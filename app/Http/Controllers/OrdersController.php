@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use App\Order;
 use App\Item;
 use App\Item_Order;
@@ -14,24 +15,29 @@ use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends Controller
 {
+    public function __construct()
+    {
+         $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $latest_order = Order::orderBy('id', 'DESC')->first();
-        if ($latest_order == null) {
-            $new_order = 0;
-        } else {
-            $new_order = $latest_order->id;
+    {   
+        $order = Order::latest()->first();
+        $count_all_orders = Order::get()->count();
+        $count_today_orders = Order::where('created_at', '>=', date('Y-m-d'))->get()->count();
+
+        if($count_all_orders == null || $count_today_orders == null || $order->created_at < date('Y-m-d')){
+            $order_number = 0;
+            $count_today_orders = $order_number;
         }
 
         $curr_date = date('dmy');
-        $order_number = 'ON/' . ($new_order + 1) . '/' . $curr_date;
+        $order_number = 'ON/' . ($count_today_orders+1) . '/' . $curr_date;
 
-        $order = Order::latest()->first();
         if($order == null || $order->status == 1){
             $order = [];
             return view('orders/index', compact('order_number', 'curr_date', 'order'));
@@ -41,18 +47,14 @@ class OrdersController extends Controller
             $order = [];
             return view('orders/index', compact('order_number', 'curr_date', 'order'));
         }
+        else if(($order->status == 0) && ($order->user->id != Auth::user()->id)){
+            Order::destroy($order->id);
+            $order = [];
+            return view('orders/index', compact('order_number', 'curr_date', 'order'));
+        }
         else{
             return view('orders/index', compact('order_number', 'curr_date', 'order'));
         }
-        
-
-        // $curr_date = date('Y-m-d H:i:s');
-        // $orders = Order::whereDate('created_at', today())->get();
-        // $grand_total = 0;
-        // foreach ($orders as $order) {
-        //     $grand_total += $order->total;
-        // }
-        // return view('orders/index', compact('orders', 'grand_total'));
     }
 
     /**
@@ -115,17 +117,15 @@ class OrdersController extends Controller
     public function update(Request $request, Order $order)
     {
         $request->validate([
-            'total' => 'required',
-            'payment_method' => 'required'
+            'total' => 'required'
         ]);
-
+        $new_total = str_replace(".", "", $request->total);
         Order::where('id', $order->id)->update([
-            'total' => $request->total,
+            'total' => $new_total,
             'payment_method' => $request->payment_method,
             'status' => 1
         ]);
-
-        return redirect()->route('history/orders/all/detail', $order->id);
+        return redirect()->route('history/orders/detail', $order->id);
     }
 
     /**
@@ -143,7 +143,8 @@ class OrdersController extends Controller
     public function generateOrder($id)
     {
         $order = Order::find($id);
-        $pdf = PDF::loadView('orders/print', compact('order'))->setPaper('a5', 'landscape');
+        $company = Company::first();
+        $pdf = PDF::loadView('orders/print', compact('order', 'company'))->setPaper('a5', 'landscape');
         return $pdf->stream();
     }
 
@@ -161,7 +162,7 @@ class OrdersController extends Controller
         $orders = Order::where([
             ['status', '=', '1'],
             ['created_at', '>=', date('Y-m-d')]
-        ])->orderBy('id', 'DESC')->get();
+        ])->orderBy('id', 'DESC')->paginate(10);
 
         $temp_total = 0;
         foreach ($orders as $order) {

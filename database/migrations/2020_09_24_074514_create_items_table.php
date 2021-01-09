@@ -17,10 +17,11 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->string('part_number')->unique();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('stock');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

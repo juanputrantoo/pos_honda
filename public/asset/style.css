@@ -1,3 +1,9 @@
+.img-sumur-bor{
+    max-width: 750px;
+    border-radius: 25px;
+    box-shadow: 0px 10px 20px 0px rgba(122,122,122,1);
+}
+
 .fab-add-button{
     position: fixed;
     right: 0;
@@ -27,4 +33,32 @@ ul .pagination{
 
 ul .pagination li{
     margin: auto!important;
+}
+
+#notifications{
+    max-height: 265px;
+    overflow-y: visible;
+}
+
+.sidebar{
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: auto; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 11; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+.topbar{
+    width: 100%; /* Set the width of the sidebar */
+    position: fixed!important; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 10; /* Stay on top */
+    /* margin-left: 220px; */
+  
+}
+
+.main{
+    margin-left: 224px;
+    margin-top: 60px;
 }

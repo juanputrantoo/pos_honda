@@ -9,6 +9,10 @@ use Illuminate\Queue\Events\Looping;
 
 class ItemsController extends Controller
 {
+    public function __construct()
+    {
+         $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,7 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        $items = Item::orderBy('name')->get();
+        $items = Item::orderBy('name')->paginate(10);
         return view('items/index', compact('items'));
     }
 
@@ -78,13 +82,18 @@ class ItemsController extends Controller
         $request->validate([
             'part_number' => 'required|unique:items',
             'name' => 'required',
-            'description' => 'required',
             'stock' => 'required',
             'price' => 'required'
         ]);
 
 
-        Item::create($request->all());
+        Item::create([
+            'part_number' => strtoupper($request->part_number),
+            'name' => ucfirst($request->name),
+            'description' => $request->description,
+            'stock' => $request->stock,
+            'price' => str_replace('.', '', $request->price)
+        ]);
         return redirect('/items');
     }
 
@@ -122,15 +131,14 @@ class ItemsController extends Controller
         $request->validate([
             'part_number' => 'required',
             'name' => 'required',
-            'description' => 'required',
             'price' => 'required'
         ]);
 
         Item::where('id', $item->id)->update([
-            'part_number' => $request->part_number,
-            'name' => $request->name,
+            'part_number' => strtoupper($request->part_number),
+            'name' => ucfirst($request->name),
             'description' => $request->description,
-            'price' => $request->price
+            'price' => str_replace('.', '', $request->price)
         ]);
         return redirect('/items');
     }
@@ -165,5 +173,16 @@ class ItemsController extends Controller
     {
         $item = Item::where('id', $request->id)->first();
         return response()->json($item->price);
+    }
+
+    public function deleted(){
+        $items = Item::onlyTrashed()->paginate(10);
+        return view('history/items/deleted', compact('items'));
+    }
+
+    public function restore($id){
+        $item = Item::onlyTrashed()->where('id', $id);
+        $item->restore();
+        return redirect()->back();
     }
 }

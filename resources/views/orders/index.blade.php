@@ -11,14 +11,14 @@
         <form method="POST" action="{{ url('/orders') }}">
             @csrf
             <div class="card p-2 position-fixed float-right rounded-0 bg-light shadow"
-                style="top:25%; right: 0%; z-index:100;">
+                style="top:25%; right: 0%; z-index:1;">
                 <div class="form-group w-auto ml-2 mr-2">
-                    <label>No. Order</label>
+                    <label>Order Number</label>
                     <input type="text" class="form-control form-control-sm" id="order_number" name="order_number"
                         value="{{ $order_number }}" readonly>
                 </div>
                 <div class="form-group w-auto ml-2 mr-2">
-                    <label>Tanggal</label>
+                    <label>Date</label>
                     <input type="datetime" class="form-control form-control-sm" id="created_at" name="created_at"
                         value="{{ date('d/m/Y') }}" readonly>
                 </div>

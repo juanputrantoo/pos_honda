@@ -48,9 +48,9 @@
                 <tr>
                     <th>No.</th>
                     <th>Order Number</th>
-                    <th>Total</th>
-                    <th>Payment Method</th>
                     <th>Date</th>
+                    <th>Total</th>
+                    <th>Admin</th>
                     <th></th>
                 </tr>
             </thead>
@@ -66,9 +66,9 @@
                     <tr>
                         <th class="align-middle">{{ $loop->iteration }}</th>
                         <td class="align-middle">{{ $order->order_number }}</td>
-                        <td class="align-middle">@currency($order->total)</td>
-                        <td class="align-middle">{{ $order->payment_method }}</td>
                         <td class="align-middle">{{ date('d/m/Y', strtotime($order->updated_at ))}}</td>
+                        <td class="align-middle">@currency($order->total)</td>
+                        <td class="align-middle">{{ $order->user->name }}</td>
                         <td class="align-middle">
                             <a href="{{ route('orders/print', $order->id) }}" class="btn btn-primary btn-sm"
                                 target="_blank">
@@ -79,5 +79,6 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $orders->links() }}
     </div>
 @endsection

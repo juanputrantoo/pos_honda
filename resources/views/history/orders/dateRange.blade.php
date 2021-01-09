@@ -2,8 +2,22 @@
 @section('title', 'Orders')
 
 @section('content')
-    <strong>Orders Between </strong>
+    <div class="m-0 d-inline">
+        <a href="{{ route('history/orders/all') }}" class="btn btn-info w-auto pull-left">
+            <i class="fas fa-chevron-circle-left"></i>
+            Back
+        </a>
+    </div>
     <hr>
+    
+    <strong>Orders Between : </strong>
+    <div>
+
+        {{ date('d/m/Y', strtotime($new_from_date)) }}
+        <i class="fas fa-arrow-right small"></i>
+        {{ date('d/m/Y', strtotime($new_to_date)) }}
+    </div>
+
     <div class="table-responsive-lg mt-4">
         <table class="table table-bordered table-hover text-center">
             <thead>
@@ -23,11 +37,10 @@
                         <td class="align-middle">{{ $order->order_number }}</td>
                         <td class="align-middle">@currency($order->total)</td>
                         <td class="align-middle">{{ $order->payment_method }}</td>
-                        <td class="align-middle">{{ date('d/m/Y', strtotime($order->updated_at)) }}</td>
+                        <td class="align-middle">{{ date('d/m/Y', strtotime($order->created_at)) }}</td>
                         <td class="align-middle">
-                            <a href="{{ route('orders/print', $order->id) }}" class="btn btn-primary btn-sm"
-                                target="_blank">
-                                <i class="fas fa-print"></i>
+                            <a href="{{ route('history/orders/detail', $order->id) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i>
                             </a>
                         </td>
                     </tr>

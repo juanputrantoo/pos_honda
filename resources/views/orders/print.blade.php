@@ -12,7 +12,7 @@
     .invoice-table {
         border-collapse: collapse;
         width: 100%;
-        margin-top: 40px;
+        /* margin-top: 100px; */
         border-left: 1px solid black;
         border-right: 1px solid black;
     }
@@ -27,18 +27,25 @@
         border-top: 1px solid black;
     }
 
-    .signature-tab {
-        position: absolute;
-        bottom: 0;
+    .head{
+        display: flex;
+        height: 90px;
+        font-size: 15px;
     }
+    .table-right{
+        width: 100%;
+        text-align: right;
+        margin-left: 450px;
+    }
+
+    
 
 </style>
 
 <body>
-    <h2 style="text-align: right;">INVOICE</h2>
-    <hr>
-    <div style="display: inline-block;">
-        <table style="width: 30%; margin-left: auto;">
+    {{-- <h2 style="text-align: right;">INVOICE</h2> --}}
+    <div class="head">
+        <table class="table-left">
             <tr>
                 <td><strong>Invoice #</strong></td>
                 <td>: {{ $order->order_number }}</td>
@@ -47,8 +54,6 @@
                 <td><strong>Admin</strong></td>
                 <td>: {{ $order->user->name }}</td>
             </tr>
-        </table>
-        <table style="width: 30%; margin-right: auto;">
             <tr>
                 <td><strong>Date</strong></td>
                 <td>: {{ date('d/m/Y', strtotime($order->created_at)) }}</td>
@@ -58,8 +63,20 @@
                 <td>: {{ $order->payment_method }}</td>
             </tr>
         </table>
+        <table class="table-right">
+            <tr>
+                <td>{{ $company->name }}</td>
+            </tr>
+            <tr>
+                <td>{{ $company->phone_number }}</td>
+            </tr>
+            <tr>
+                <td>{{ $company->address }}</td>
+            </tr>
+        </table>
+
     </div>
-    <br>
+    <hr>
 
     <table class="invoice-table">
         <tr>

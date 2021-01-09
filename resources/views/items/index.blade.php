@@ -43,6 +43,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $items->links() }}
     </div>
     <a class="btn btn-success rounded-circle fab-add-button" href="{{ url('/items/create') }}">
         <i class="fas fa-plus align-middle"></i>

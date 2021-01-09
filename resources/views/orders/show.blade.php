@@ -43,11 +43,10 @@
                         <div class="col-sm-9">
                             <select name="items"
                                 class="form-control form-control-sm items selectpicker @error('items') is-invalid @enderror"
-                                id="items" data-live-search="true">
+                                id="items" data-live-search="true" data-size="5">
                                 <option value="" disabled selected>...</option>
                                 @foreach ($items as $item)
-                                    <option value="{{ $item->id }}">{{ $item->part_number }} | {{ $item->name }} |
-                                        {{ $item->stock }}
+                                    <option value="{{ $item->id }}">{{ $item->part_number }} | {{ $item->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -61,8 +60,13 @@
                     <div class="form-group row m-0">
                         <label for="staticEmail" class="col-sm-3 col-form-label">Price</label>
                         <div class="col-sm-9">
-                            <input type="number" name='price' placeholder='0' class="form-control form-control-sm price"
-                                step="0.00" id="price" min="0" readonly />
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Rp</span>
+                                </div>
+                                <input type="number" name='price' placeholder='0' class="form-control form-control-sm price"
+                                    step="0.00" id="price" min="0" readonly />
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row m-0">
@@ -141,8 +145,8 @@
                 <td class="align-middle">{{ $odr->pivot->unit }}</td>
                 <td class="align-middle">@currency($odr->price)</td>
                 <td class="align-middle">{{ $odr->pivot->discount }}</td>
-                <td class="align-middle text-right sub_total" id="sub_total">{{ $odr->pivot->sub_total }}</td>
-                <td>
+                <td class="align-middle text-right sub_total" id="sub_total"> @currency($odr->pivot->sub_total) </td>
+                <td class="align-middle">
                     <form method="POST" action="/itemorders/{{ $odr->pivot->id }}" class="m-0">
                         @method('delete')
                         @csrf
@@ -165,14 +169,19 @@
                             <tr>
                                 <th class="text-center align-middle">Total</th>
                                 <td class="text-center">
-                                    <input type="number" name='total' id="total"
-                                        class="form-control form-control-sm @error('total') is-invalid @enderror"
-                                        readonly />
-                                    @error('total')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Rp</span>
+                                        </div>
+                                        <input type="text" name='total' id="total"
+                                            class="form-control form-control-sm @error('total') is-invalid @enderror"
+                                            readonly />
+                                        @error('total')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                     </div>
-                                    @enderror
                                 </td>
                             </tr>
                             <tr>
@@ -233,10 +242,13 @@
             sub_total = null;
             $('.sub_total').each(function() {
                 var text = $(this).text();
-                var num = parseInt(text);
+                var new_text = text.replace(/[^0-9]/g,'');
+                var num = parseInt(new_text);
                 sub_total += num;
             });
-            $('#total').val((sub_total));
+            var money_format = sub_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            // console.log(money_format);
+            $('#total').val(money_format);
         });
 
     </script>

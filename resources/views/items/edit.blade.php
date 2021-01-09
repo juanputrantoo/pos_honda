@@ -100,10 +100,10 @@
                             <label>Price</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">Rp.</span>
+                                    <span class="input-group-text">Rp</span>
                                 </div>
-                                <input type="number" class="form-control @error('price') is-invalid @enderror" name="price"
-                                    value="{{ $item->price }}">
+                                <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
+                                    value="{{ $item->price }}" id="price">
                             </div>
                             @error('price')
                                 <div class="invalid-feedback">
@@ -154,3 +154,10 @@
     </form>
 
 @endsection
+@push('scripts')
+    <script>
+        $('#price').mask('#.##0', {
+            reverse: true
+        });
+    </script>
+@endpush

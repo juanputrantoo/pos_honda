@@ -2,42 +2,6 @@
 @section('title', 'Orders')
 
 @section('content')
-
-    <div class="m-0 d-inline">
-        <a href="{{ url('/users') }}" class="btn btn-info w-auto pull-left">
-            <i class="fas fa-chevron-circle-left"></i>
-            Back
-        </a>
-        <button type="submit" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-delete-user-{{ $user->id }}">
-            <i class="fa fa-trash"></i>
-        </button>
-        <div class="modal fade" id="modal-delete-user-{{ $user->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Delete User <i class="fas fa-trash text-danger"></i>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure delete <strong>{{ $user->name }}</strong> ?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <form method="POST" action="{{ route('users/destroy', $user->id) }}" class="m-0">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
     <form method="POST" action="{{ route('users/update', $user->id) }}">
         @method('patch')
         @csrf
@@ -81,6 +45,9 @@
         </div>
     </form>
     <div class="m-0 d-inline">
-        <a href="" class="pull-right small">Change Password?</a>
+        <a href="{{ route('users/changePassword', $user->id) }}" class="pull-right small">
+            <i class="fas fa-unlock-alt"></i>
+            Change Password?
+        </a>
     </div>
 @endsection

@@ -6,29 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>@yield('title')</title>
+    <title>POS</title>
 
-    {{--
-    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
-    --}}
-    <link href="{{ asset('/fonts/vendor/font-awesome/all.css') }}" rel="stylesheet">
+    <link href="{{ asset('/fonts/vendor/font-awesome/css/all.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('/asset/style.css') }}" rel="stylesheet">
     <link href="{{ asset('/asset/sb-admin/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/asset/bootstrap-select.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/asset/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"> --}}
 
     <script src="{{ asset('/js/app.js') }}" defer></script>
-    <script src="{{ asset('/fonts/vendor/font-awesome/font-awesome-all.js') }}" data-auto-replace-svg="nest" defer>
-    </script>
+    <script src="{{ asset('/fonts/vendor/font-awesome/js/all.js') }}" data-auto-replace-svg="nest" defer></script>
     <script src="{{ asset('/asset/sb-admin/bootstrap.bundle.min.js') }}" defer></script>
     <script src="{{ asset('/asset/sb-admin/jquery.easing.min.js') }}" defer></script>
     <script src="{{ asset('/asset/sb-admin/sb-admin-2.min.js') }}" defer></script>
     <script src="{{ asset('/asset/bootstrap-select.min.js') }}" defer></script>
     <script src="{{ asset('/asset/bootstrap-datepicker.min.js') }}" defer></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" defer></script> --}}
     <script src="{{ asset('/asset/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('/asset/jquery.mask.min.js') }}"></script>
 </head>
 
 <body>
@@ -58,10 +53,7 @@
                     <i class="fas fa-fw fa-cash-register"></i>
                     <span>Orders</span></a>
             </li>
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Others
-            </div>
+            <hr class="sidebar-divider my-0">
             <li class="nav-item {{ Request::segment(1) === 'history' ? 'active' : null }}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse_history"
                     aria-expanded="true" aria-controls="collapseTwo">
@@ -72,23 +64,38 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Orders</h6>
-                        {{--
-                        <hr class="m-0 ml-3 mr-3"> --}}
+                        
+                        <hr class="m-0 ml-3 mr-3">
                         <a href="{{ route('history/orders/all') }}"
-                            class="collapse-item {{ Request::segment(3) === 'all' ? 'active' : null }}">All</a>
+                            class="collapse-item {{ Request::segment(3) === 'all' || Request::segment(3) === 'dateRange' || Request::segment(3) === 'detail' ? 'active' : null }}">All</a>
                         <a href="{{ route('history/orders/today') }}"
                             class="collapse-item {{ Request::segment(3) === 'today' ? 'active' : null }}">Today</a>
+
+                        <h6 class="collapse-header">Items</h6>
+                        
+                        <hr class="m-0 ml-3 mr-3">
+                        <a href="{{ route('history/items/deleted') }}"
+                            class="collapse-item {{ Request::segment(3) === 'deleted' ? 'active' : null }}">Deleted</a>
 
                     </div>
                 </div>
             </li>
-            <hr class="sidebar-divider mb-0">
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Others
+            </div>
             <li class="nav-item {{ Request::segment(1) === 'users' ? 'active' : null }}">
                 <a class="nav-link" href="{{ url('/users') }}">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Users</span></a>
             </li>
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item {{ Request::segment(1) === 'company' ? 'active' : null }}">
+                <a class="nav-link" href="{{ route('company') }}">
+                    <i class="fas fa-fw fa-building"></i>
+                    <span>Company</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
             {{-- <div class="sidebar-heading">
                 Addons
             </div>
@@ -140,7 +147,7 @@
                     <ul class="navbar-nav ml-auto">
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
+                        {{-- <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-search fa-fw"></i>
@@ -161,7 +168,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </li>
+                        </li> --}}
 
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
@@ -181,7 +188,7 @@
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
+                                aria-labelledby="alertsDropdown" id="notifications">
                                 <h6 class="dropdown-header">
                                     Notifications
                                 </h6>
@@ -194,7 +201,7 @@
                                         </div>
                                     </a>
                                 @endforeach
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                
                             </div>
                         </li>
 
@@ -211,18 +218,17 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="@if(Auth::user()->role == 1) {{ route('users/edit', Auth::user()->id) }} @elseif(Auth::user()->role == 2) {{ route('users/editProfile', Auth::user()->id) }} @endif">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Edit Profile
-                                </a>
-                                {{-- <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a> --}}
+                                @if (Auth::user()->role == 1)
+                                    <a class="dropdown-item" href="{{ route('users/edit', Auth::user()->id) }}">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Edit Profile
+                                    </a>
+                                @elseif (Auth::user()->role == 2)
+                                    <a class="dropdown-item" href="{{ route('users/changePassword', Auth::user()->id) }}">
+                                        <i class="fas fa-unlock-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Change Password
+                                    </a>
+                                @endif
                                 <div class="dropdown-divider"></div>
                                 <form method="GET" action="{{ route('logout') }}">
                                     
@@ -233,13 +239,12 @@
                                 </form>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
                 <!-- End of Topbar -->
 
-                <div class="">
+                <div class="main">
                     <div class="card p-5 rounded-0">
                         @yield('content')
                     </div>
@@ -249,30 +254,7 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded-circle h-auto" href="#page-top">
-        <i class="fas fa-angle-up p-3"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     @stack('scripts')
 </body>
 

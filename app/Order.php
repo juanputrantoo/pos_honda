@@ -12,11 +12,11 @@ class Order extends Model
     public function items()
     {
         return $this->belongsToMany(Item::class)
-        ->withPivot(['id', 'quantity', 'unit', 'discount', 'sub_total']);
+        ->withPivot(['id', 'quantity', 'unit', 'discount', 'sub_total'])->withTrashed();
     }
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
     
 }

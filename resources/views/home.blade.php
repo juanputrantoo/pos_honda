@@ -2,15 +2,11 @@
 @section('title', 'Home')
 
 @section('content')
-    <div class="card shadow" style="width: 18rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-            <i class="fa fa-book"></i>
-        </div>
-    </div>
+<div class="text-center">
+
+    <img class="img-sumur-bor" src="{{ asset('/asset/images/Honda Sumur Bor.jpg') }}">
+    {{-- <h5 style="position: absolute;">SELAMAT DATANG, 
+        <strong>{{ Auth::user()->name }}</strong>
+    </h5> --}}
+</div>
 @endsection

@@ -25,7 +25,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Part Number</label>
-                            <input type="text" class="form-control @error('part_number') is-invalid @enderror"
+                            <input type="text" class="form-control part_number @error('part_number') is-invalid @enderror"
                                 name="part_number" value="{{ old('part_number') }}">
                             @error('part_number')
                                 <div class="invalid-feedback">
@@ -67,8 +67,13 @@
                         </div>
                         <div class="form-group">
                             <label>Price</label>
-                            <input type="number" class="form-control @error('price') is-invalid @enderror" name="price"
-                                value="{{ old('price') }}">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Rp</span>
+                                </div>
+                                <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
+                                    value="{{ old('price') }}" id="price">
+                            </div>
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -87,3 +92,10 @@
     </form>
 
 @endsection
+@push('scripts')
+    <script>
+        $('#price').mask('#.##0', {
+            reverse: true
+        });
+    </script>
+@endpush

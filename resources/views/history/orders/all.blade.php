@@ -2,41 +2,46 @@
 @section('title', 'Orders')
 
 @section('content')
-
     <strong>All Orders</strong>
     <hr>
-
     <div class="row">
         <div class="col-md-6">
-            <div class="d-inline">
+            <table class="m-auto">
                 <form method="GET" action="{{ route('orders/dateRange') }}">
-                    <div class="input-group date datepicker" id='datepicker_start' style="width: 200px;">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-secondary">
-                                <i class="fas fa-calendar fa-sm"></i>
+                    <tr>
+                        <td>
+                            <div class="input-group date datepicker" id='datepicker_start' style="width: 200px;">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary">
+                                        <i class="fas fa-calendar fa-sm"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control small rounded-0 @error('from_date') is-invalid @enderror"
+                                    name="from_date" readonly>
+                            </div>
+                        </td>
+                        <td>
+                            <i class="fas fa-arrow-right m-auto"></i>
+                        </td>
+                        <td>
+                            <div class="input-group date datepicker" id='datepicker_start' style="width: 200px;">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary">
+                                        <i class="fas fa-calendar fa-sm"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control small rounded-0 @error('to_date') is-invalid @enderror"
+                                    name="to_date" readonly>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="submit" class="border-0 bg-transparent">
+                                <i class="fas fa-search text-primary"></i>
                             </button>
-                        </div>
-                        <input type="text" class="form-control small rounded-0 @error('from_date') is-invalid @enderror"
-                            name="from_date" readonly>
-                        </div>
-                        <i class="fas fa-arrow-right m-auto"></i>
-
-
-                    <div class="input-group date datepicker" id='datepicker_start' style="width: 200px;">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-secondary">
-                                <i class="fas fa-calendar fa-sm"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control small rounded-0 @error('to_date') is-invalid @enderror"
-                            name="to_date" readonly>
-                        </div>
-                                <button type="submit" class="border-0 bg-transparent">
-                                    <i class="fas fa-search text-primary"></i>
-                                </button>
-
+                        </td>
+                    </tr>
                 </form>
-            </div>
+            </table>
         </div>
         <div class="col-md-6 d-flex align-middle">
             <div class="input-group w-75 m-auto">
@@ -59,22 +64,22 @@
                 <tr>
                     <th>#</th>
                     <th>Order Number</th>
-                    <th>Total</th>
-                    <th>Payment Method</th>
                     <th>Date</th>
+                    <th>Total</th>
+                    <th>Admin</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody-orders">
                 @foreach ($orders as $order)
                     <tr>
                         <th class="align-middle">{{ $loop->iteration }}</th>
                         <td class="align-middle">{{ $order->order_number }}</td>
+                        <td class="align-middle">{{ $order->updated_at->format('d/m/Y') }}</td>
                         <td class="align-middle">@currency($order->total)</td>
-                        <td class="align-middle">{{ $order->payment_method }}</td>
-                        <td class="align-middle">{{ date('d/m/Y', strtotime($order->updated_at)) }}</td>
+                        <td class="align-middle">{{ $order->user->name }}</td>
                         <td class="align-middle">
-                            <a href="{{ route('history/orders/all/detail', $order->id) }}" class="btn btn-primary btn-sm">
+                            <a href="{{ route('history/orders/detail', $order->id) }}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>
@@ -106,7 +111,7 @@
                     'search_orders': $value
                 },
                 success: function(data) {
-                    $('tbody').html(data);
+                    $('tbody#tbody-orders').html(data);
                 }
             });
         })

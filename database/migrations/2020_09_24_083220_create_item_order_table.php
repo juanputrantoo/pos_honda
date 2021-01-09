@@ -22,7 +22,7 @@ class CreateItemOrderTable extends Migration
             $table->integer('quantity');
             $table->string('unit');
             $table->decimal('discount')->default('0');
-            $table->decimal('sub_total', 10, 2);
+            $table->decimal('sub_total', 10, 0);
             $table->timestamps();
         });
     }
